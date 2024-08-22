@@ -3,6 +3,9 @@ package com.ruoyi.web.controller.system;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.system.domain.AdminUser;
+import com.ruoyi.web.controller.tool.BeanCopyUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,7 +37,7 @@ import com.ruoyi.system.service.ISysUserService;
 
 /**
  * 用户信息
- * 
+ *
  * @author ruoyi
  */
 @RestController
@@ -229,7 +232,19 @@ public class SysUserController extends BaseController
         ajax.put("roles", SysUser.isAdmin(userId) ? roles : roles.stream().filter(r -> !r.isAdmin()).collect(Collectors.toList()));
         return ajax;
     }
-
+    /**
+     * 根据用户编号获取授权角色
+     */
+    @PreAuthorize("@ss.hasPermi('system:user:query')")
+    @GetMapping("/front/{userId}")
+    public AjaxResult getUserMessage(@PathVariable("userId") Long userId)
+    {
+        AjaxResult ajax = AjaxResult.success();
+        SysUser user = userService.selectUserById(userId);
+        AdminUser adminUser = BeanCopyUtils.copyBean(user, AdminUser.class);
+        ajax.put("user", adminUser);
+        return ajax;
+    }
     /**
      * 用户授权角色
      */

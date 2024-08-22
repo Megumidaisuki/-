@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.CardMapper">
+    
+    <resultMap type="Card" id="CardResult">
+        <result property="cardId"    column="card_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="score"    column="score"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="isDeleted"    column="is_deleted"    />
+        <result property="path"    column="path"    />
+    </resultMap>
+
+    <sql id="selectCardVo">
+        select card_id, user_id, score, create_time, is_deleted, path from card
+    </sql>
+
+    <select id="selectCardList" parameterType="Card" resultMap="CardResult">
+        <include refid="selectCardVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="score != null "> and score = #{score}</if>
+            <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
+            <if test="path != null  and path != ''"> and path = #{path}</if>
+        </where>
+    </select>
+    
+    <select id="selectCardByCardId" parameterType="Long" resultMap="CardResult">
+        <include refid="selectCardVo"/>
+        where card_id = #{cardId}
+    </select>
+
+    <insert id="insertCard" parameterType="Card">
+        insert into card
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cardId != null">card_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="score != null">score,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+            <if test="path != null">path,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cardId != null">#{cardId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="score != null">#{score},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="isDeleted != null">#{isDeleted},</if>
+            <if test="path != null">#{path},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCard" parameterType="Card">
+        update card
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="score != null">score = #{score},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
+            <if test="path != null">path = #{path},</if>
+        </trim>
+        where card_id = #{cardId}
+    </update>
+
+    <delete id="deleteCardByCardId" parameterType="Long">
+        delete from card where card_id = #{cardId}
+    </delete>
+
+    <delete id="deleteCardByCardIds" parameterType="String">
+        delete from card where card_id in 
+        <foreach item="cardId" collection="array" open="(" separator="," close=")">
+            #{cardId}
+        </foreach>
+    </delete>
+</mapper>
