@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.QuestionMapper">
+    
+    <resultMap type="Question" id="QuestionResult">
+        <result property="questionId"    column="question_id"    />
+        <result property="questionnaireId"    column="questionnaire_id"    />
+        <result property="content"    column="content"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="isDeleted"    column="is_deleted"    />
+        <result property="order"    column="order"    />
+    </resultMap>
+
+    <sql id="selectQuestionVo">
+        select question_id, questionnaire_id, content, create_time, is_deleted, order from question
+    </sql>
+
+    <select id="selectQuestionList" parameterType="Question" resultMap="QuestionResult">
+        <include refid="selectQuestionVo"/>
+        <where>  
+            <if test="questionnaireId != null "> and questionnaire_id = #{questionnaireId}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
+            <if test="order != null "> and order = #{order}</if>
+        </where>
+    </select>
+    
+    <select id="selectQuestionByQuestionId" parameterType="Long" resultMap="QuestionResult">
+        <include refid="selectQuestionVo"/>
+        where question_id = #{questionId}
+    </select>
+
+    <insert id="insertQuestion" parameterType="Question">
+        insert into question
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="questionId != null">question_id,</if>
+            <if test="questionnaireId != null">questionnaire_id,</if>
+            <if test="content != null">content,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+            <if test="order != null">order,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="questionId != null">#{questionId},</if>
+            <if test="questionnaireId != null">#{questionnaireId},</if>
+            <if test="content != null">#{content},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="isDeleted != null">#{isDeleted},</if>
+            <if test="order != null">#{order},</if>
+         </trim>
+    </insert>
+
+    <update id="updateQuestion" parameterType="Question">
+        update question
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="questionnaireId != null">questionnaire_id = #{questionnaireId},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
+            <if test="order != null">order = #{order},</if>
+        </trim>
+        where question_id = #{questionId}
+    </update>
+
+    <delete id="deleteQuestionByQuestionId" parameterType="Long">
+        delete from question where question_id = #{questionId}
+    </delete>
+
+    <delete id="deleteQuestionByQuestionIds" parameterType="String">
+        delete from question where question_id in 
+        <foreach item="questionId" collection="array" open="(" separator="," close=")">
+            #{questionId}
+        </foreach>
+    </delete>
+</mapper>

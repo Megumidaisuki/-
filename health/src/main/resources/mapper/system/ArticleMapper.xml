@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ArticleMapper">
+
+    <resultMap type="Article" id="ArticleResult">
+        <result property="articleId"    column="article_id"    />
+        <result property="titile"    column="titile"    />
+        <result property="content"    column="content"    />
+        <result property="cover"    column="cover"    />
+        <result property="author"    column="author"    />
+        <result property="viewCount"    column="view_count"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="like"    column="like"    />
+        <result property="isDeleted"    column="is_deleted"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectArticleVo">
+        select article_id, titile, content, cover, author, view_count, create_time, `like`, is_deleted, status from article
+    </sql>
+
+    <select id="selectArticleList" parameterType="Article" resultMap="ArticleResult">
+        <include refid="selectArticleVo"/>
+        <where>
+            <if test="titile != null  and titile != ''"> and titile = #{titile}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="cover != null  and cover != ''"> and cover = #{cover}</if>
+            <if test="author != null "> and author = #{author}</if>
+            <if test="viewCount != null "> and view_count = #{viewCount}</if>
+            <if test="like != null "> and `like` = #{like}</if>
+            <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectArticleByArticleId" parameterType="Long" resultMap="ArticleResult">
+        <include refid="selectArticleVo"/>
+        where article_id = #{articleId}
+    </select>
+
+    <insert id="insertArticle" parameterType="Article">
+        insert into article
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="articleId != null">article_id,</if>
+            <if test="titile != null">titile,</if>
+            <if test="content != null">content,</if>
+            <if test="cover != null">cover,</if>
+            <if test="author != null">author,</if>
+            <if test="viewCount != null">view_count,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="like != null">`like`,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="articleId != null">#{articleId},</if>
+            <if test="titile != null">#{titile},</if>
+            <if test="content != null">#{content},</if>
+            <if test="cover != null">#{cover},</if>
+            <if test="author != null">#{author},</if>
+            <if test="viewCount != null">#{viewCount},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="like != null">#{like},</if>
+            <if test="isDeleted != null">#{isDeleted},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+
+    <update id="updateArticle" parameterType="Article">
+        update article
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="titile != null">titile = #{titile},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="cover != null">cover = #{cover},</if>
+            <if test="author != null">author = #{author},</if>
+            <if test="viewCount != null">view_count = #{viewCount},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="like != null">`like` = #{like},</if>
+            <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where article_id = #{articleId}
+    </update>
+    <update id="renewArticle">
+        update article
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="viewCount != null">view_count = #{viewCount},</if>
+            <if test="like != null">`like` = #{like},</if>
+        </trim>
+        where article_id = #{articleId}
+    </update>
+
+    <delete id="deleteArticleByArticleId" parameterType="Long">
+        delete from article where article_id = #{articleId}
+    </delete>
+
+    <delete id="deleteArticleByArticleIds" parameterType="String">
+        delete from article where article_id in
+        <foreach item="articleId" collection="array" open="(" separator="," close=")">
+            #{articleId}
+        </foreach>
+    </delete>
+</mapper>
