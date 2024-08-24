@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.system.mapper.RecordMapper">
-    
+
     <resultMap type="Record" id="RecordResult">
         <result property="recordId"    column="record_id"    />
         <result property="createTime"    column="create_time"    />
@@ -17,12 +17,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectRecordList" parameterType="Record" resultMap="RecordResult">
         <include refid="selectRecordVo"/>
-        <where>  
+        <where>
             <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
             <if test="userId != null "> and user_id = #{userId}</if>
         </where>
     </select>
-    
+
     <select id="selectRecordByRecordId" parameterType="Long" resultMap="RecordResult">
         <include refid="selectRecordVo"/>
         where record_id = #{recordId}
@@ -43,6 +43,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userId != null">#{userId},</if>
          </trim>
     </insert>
+    <insert id="insertRecordReturnId" useGeneratedKeys="true" keyProperty="recordId">
+        insert into record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="recordId != null">record_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+            <if test="userId != null">user_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="recordId != null">#{recordId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="isDeleted != null">#{isDeleted},</if>
+            <if test="userId != null">#{userId},</if>
+        </trim>
+    </insert>
 
     <update id="updateRecord" parameterType="Record">
         update record
@@ -59,7 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteRecordByRecordIds" parameterType="String">
-        delete from record where record_id in 
+        delete from record where record_id in
         <foreach item="recordId" collection="array" open="(" separator="," close=")">
             #{recordId}
         </foreach>

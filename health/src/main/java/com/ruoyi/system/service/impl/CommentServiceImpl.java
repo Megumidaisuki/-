@@ -10,19 +10,19 @@ import com.ruoyi.system.service.ICommentService;
 
 /**
  * 【请填写功能名称】Service业务层处理
- * 
+ *
  * @author ruoyi
  * @date 2024-08-22
  */
 @Service
-public class CommentServiceImpl implements ICommentService 
+public class CommentServiceImpl implements ICommentService
 {
     @Autowired
     private CommentMapper commentMapper;
 
     /**
      * 查询【请填写功能名称】
-     * 
+     *
      * @param commentId 【请填写功能名称】主键
      * @return 【请填写功能名称】
      */
@@ -34,7 +34,7 @@ public class CommentServiceImpl implements ICommentService
 
     /**
      * 查询【请填写功能名称】列表
-     * 
+     *
      * @param comment 【请填写功能名称】
      * @return 【请填写功能名称】
      */
@@ -46,7 +46,7 @@ public class CommentServiceImpl implements ICommentService
 
     /**
      * 新增【请填写功能名称】
-     * 
+     *
      * @param comment 【请填写功能名称】
      * @return 结果
      */
@@ -59,7 +59,7 @@ public class CommentServiceImpl implements ICommentService
 
     /**
      * 修改【请填写功能名称】
-     * 
+     *
      * @param comment 【请填写功能名称】
      * @return 结果
      */
@@ -71,7 +71,7 @@ public class CommentServiceImpl implements ICommentService
 
     /**
      * 批量删除【请填写功能名称】
-     * 
+     *
      * @param commentIds 需要删除的【请填写功能名称】主键
      * @return 结果
      */
@@ -83,7 +83,7 @@ public class CommentServiceImpl implements ICommentService
 
     /**
      * 删除【请填写功能名称】信息
-     * 
+     *
      * @param commentId 【请填写功能名称】主键
      * @return 结果
      */
@@ -92,4 +92,6 @@ public class CommentServiceImpl implements ICommentService
     {
         return commentMapper.deleteCommentByCommentId(commentId);
     }
+
+
 }

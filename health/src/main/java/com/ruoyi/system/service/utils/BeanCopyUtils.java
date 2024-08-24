@@ -1,4 +1,4 @@
-package com.ruoyi.web.controller.tool;
+package com.ruoyi.system.service.utils;
 
 import org.springframework.beans.BeanUtils;
 

@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.system.domain.AdminUser;
-import com.ruoyi.web.controller.tool.BeanCopyUtils;
+import com.ruoyi.system.service.utils.BeanCopyUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;

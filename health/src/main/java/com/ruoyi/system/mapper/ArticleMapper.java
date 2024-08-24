@@ -3,6 +3,7 @@ package com.ruoyi.system.mapper;
 import java.util.List;
 import com.ruoyi.system.domain.Article;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 【请填写功能名称】Mapper接口
@@ -62,5 +63,5 @@ public interface ArticleMapper
     public int deleteArticleByArticleIds(Long[] articleIds);
 
 
-    void renewArticle(Long articleId, Integer like, Integer viewCount);
+    void renewArticle(@Param("articleId") Long articleId, @Param("like") Integer like, @Param("viewCount") Integer viewCount);
 }

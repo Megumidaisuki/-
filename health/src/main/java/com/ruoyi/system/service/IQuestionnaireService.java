@@ -5,15 +5,15 @@ import com.ruoyi.system.domain.Questionnaire;
 
 /**
  * 【请填写功能名称】Service接口
- * 
+ *
  * @author ruoyi
  * @date 2024-08-22
  */
-public interface IQuestionnaireService 
+public interface IQuestionnaireService
 {
     /**
      * 查询【请填写功能名称】
-     * 
+     *
      * @param questionnaireId 【请填写功能名称】主键
      * @return 【请填写功能名称】
      */
@@ -21,7 +21,7 @@ public interface IQuestionnaireService
 
     /**
      * 查询【请填写功能名称】列表
-     * 
+     *
      * @param questionnaire 【请填写功能名称】
      * @return 【请填写功能名称】集合
      */
@@ -29,7 +29,7 @@ public interface IQuestionnaireService
 
     /**
      * 新增【请填写功能名称】
-     * 
+     *
      * @param questionnaire 【请填写功能名称】
      * @return 结果
      */
@@ -37,7 +37,7 @@ public interface IQuestionnaireService
 
     /**
      * 修改【请填写功能名称】
-     * 
+     *
      * @param questionnaire 【请填写功能名称】
      * @return 结果
      */
@@ -45,7 +45,7 @@ public interface IQuestionnaireService
 
     /**
      * 批量删除【请填写功能名称】
-     * 
+     *
      * @param questionnaireIds 需要删除的【请填写功能名称】主键集合
      * @return 结果
      */
@@ -53,9 +53,19 @@ public interface IQuestionnaireService
 
     /**
      * 删除【请填写功能名称】信息
-     * 
+     *
      * @param questionnaireId 【请填写功能名称】主键
      * @return 结果
      */
     public int deleteQuestionnaireByQuestionnaireId(Long questionnaireId);
+
+    List<Questionnaire> selectQuestionnaireMessage(Questionnaire questionnaire);
+
+    void submitQuestionnaire(Questionnaire questionnaire,String text);
+
+    int addQuestionnaire(Questionnaire questionnaire);
+
+    int deleteQuestionnaire(Long questionnaireId);
+
+    List<Questionnaire> selectUserQuestionnaire();
 }

@@ -5,9 +5,11 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
+import java.util.List;
+
 /**
  * 【请填写功能名称】对象 question
- * 
+ *
  * @author ruoyi
  * @date 2024-08-22
  */
@@ -34,61 +36,83 @@ public class Question extends BaseEntity
     @Excel(name = "顺序")
     private Long order;
 
-    public void setQuestionId(Long questionId) 
+    private List<Answer> answerList;
+
+    /** 0代表单选，1代表多选，2代表简答*/
+    private Integer status;
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public List<Answer> getAnswerList() {
+        return answerList;
+    }
+
+    public void setAnswerList(List<Answer> answerList) {
+        this.answerList = answerList;
+    }
+
+    public void setQuestionId(Long questionId)
     {
         this.questionId = questionId;
     }
 
-    public Long getQuestionId() 
+    public Long getQuestionId()
     {
         return questionId;
     }
-    public void setQuestionnaireId(Long questionnaireId) 
+    public void setQuestionnaireId(Long questionnaireId)
     {
         this.questionnaireId = questionnaireId;
     }
 
-    public Long getQuestionnaireId() 
+    public Long getQuestionnaireId()
     {
         return questionnaireId;
     }
-    public void setContent(String content) 
+    public void setContent(String content)
     {
         this.content = content;
     }
 
-    public String getContent() 
+    public String getContent()
     {
         return content;
     }
-    public void setIsDeleted(Long isDeleted) 
+    public void setIsDeleted(Long isDeleted)
     {
         this.isDeleted = isDeleted;
     }
 
-    public Long getIsDeleted() 
+    public Long getIsDeleted()
     {
         return isDeleted;
     }
-    public void setOrder(Long order) 
+    public void setOrder(Long order)
     {
         this.order = order;
     }
 
-    public Long getOrder() 
+    public Long getOrder()
     {
         return order;
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("questionId", getQuestionId())
-            .append("questionnaireId", getQuestionnaireId())
-            .append("content", getContent())
-            .append("createTime", getCreateTime())
-            .append("isDeleted", getIsDeleted())
-            .append("order", getOrder())
-            .toString();
+        return "Question{" +
+                "questionId=" + questionId +
+                ", questionnaireId=" + questionnaireId +
+                ", content='" + content + '\'' +
+                ", isDeleted=" + isDeleted +
+                ", order=" + order +
+                ", answerList=" + answerList +
+                ", status=" + status +
+                '}';
     }
 }

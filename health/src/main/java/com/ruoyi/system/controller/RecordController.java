@@ -2,6 +2,8 @@ package com.ruoyi.system.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.system.domain.Questionnaire;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +25,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 【请填写功能名称】Controller
- * 
+ *
  * @author ruoyi
  * @date 2024-08-22
  */
@@ -45,6 +47,19 @@ public class RecordController extends BaseController
         List<Record> list = recordService.selectRecordList(record);
         return getDataTable(list);
     }
+
+    /**
+     * 获取提交的问卷信息
+     */
+    @PreAuthorize("@ss.hasPermi('system:record:list')")
+    @GetMapping("/getQuestionnaireMessage")
+    public TableDataInfo getQuestionnaireMessage(Record record)
+    {
+        startPage();
+        List<Questionnaire> res = recordService.selectQuestionMessage(record);
+        return getDataTable(res);
+    }
+
 
     /**
      * 导出【请填写功能名称】列表

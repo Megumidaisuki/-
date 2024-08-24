@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.system.mapper.CommentMapper">
-    
+
     <resultMap type="Comment" id="CommentResult">
         <result property="commentId"    column="comment_id"    />
         <result property="content"    column="content"    />
@@ -16,32 +16,33 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectCommentVo">
-        select comment_id, content, parent_id, like, user_id, create_time, is_deleted, article_id from comment
+        select comment_id, content, parent_id, `like`, user_id, create_time, is_deleted, article_id from comment
     </sql>
 
     <select id="selectCommentList" parameterType="Comment" resultMap="CommentResult">
         <include refid="selectCommentVo"/>
-        <where>  
+        <where>
             <if test="content != null  and content != ''"> and content = #{content}</if>
             <if test="parentId != null "> and parent_id = #{parentId}</if>
-            <if test="like != null "> and like = #{like}</if>
+            <if test="like != null "> and `like` = #{like}</if>
             <if test="userId != null "> and user_id = #{userId}</if>
             <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
             <if test="articleId != null "> and article_id = #{articleId}</if>
         </where>
     </select>
-    
+
     <select id="selectCommentByCommentId" parameterType="Long" resultMap="CommentResult">
         <include refid="selectCommentVo"/>
         where comment_id = #{commentId}
     </select>
+
 
     <insert id="insertComment" parameterType="Comment" useGeneratedKeys="true" keyProperty="commentId">
         insert into comment
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="content != null">content,</if>
             <if test="parentId != null">parent_id,</if>
-            <if test="like != null">like,</if>
+            <if test="like != null">`like`,</if>
             <if test="userId != null">user_id,</if>
             <if test="createTime != null">create_time,</if>
             <if test="isDeleted != null">is_deleted,</if>
@@ -63,11 +64,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="content != null">content = #{content},</if>
             <if test="parentId != null">parent_id = #{parentId},</if>
-            <if test="like != null">like = #{like},</if>
+            <if test="like != null">`like` = #{like},</if>
             <if test="userId != null">user_id = #{userId},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
             <if test="articleId != null">article_id = #{articleId},</if>
+        </trim>
+        where comment_id = #{commentId}
+    </update>
+    <update id="renewComment">
+        update comment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="like != null">`like` = #{like},</if>
         </trim>
         where comment_id = #{commentId}
     </update>
@@ -77,7 +85,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteCommentByCommentIds" parameterType="String">
-        delete from comment where comment_id in 
+        delete from comment where comment_id in
         <foreach item="commentId" collection="array" open="(" separator="," close=")">
             #{commentId}
         </foreach>

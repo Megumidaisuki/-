@@ -4,14 +4,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -23,7 +16,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 【请填写功能名称】Controller
- * 
+ *
  * @author ruoyi
  * @date 2024-08-22
  */
@@ -45,6 +38,60 @@ public class QuestionnaireController extends BaseController
         List<Questionnaire> list = questionnaireService.selectQuestionnaireList(questionnaire);
         return getDataTable(list);
     }
+
+    /**
+     * 查询问卷的详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('system:questionnaire:query')")
+    @GetMapping("/getQuestionnaireMessage")
+    public AjaxResult getQuestionnaieMessage(Questionnaire questionnaire)
+    {
+        return success(questionnaireService.selectQuestionnaireMessage(questionnaire));
+    }
+
+    /**
+     * 查询用户没有做过的问卷
+     */
+    @PreAuthorize("@ss.hasPermi('system:questionnaire:query')")
+    @GetMapping("/getUserQuestionnaire")
+    public AjaxResult getUserQuestionnaire()
+    {
+        return success(questionnaireService.selectUserQuestionnaire());
+    }
+
+
+    /**
+     * 提交问卷
+     */
+    @PreAuthorize("@ss.hasPermi('system:questionnaire:query')")
+    @PostMapping("/submitQuestionnaire")
+    public AjaxResult submitQuestionnaire(@RequestBody Questionnaire questionnaire, String text){
+        questionnaireService.submitQuestionnaire(questionnaire,text);
+        return success();
+    }
+
+    /**
+     * 新增问卷
+     */
+    @PreAuthorize("@ss.hasPermi('system:questionnaire:add')")
+    @Log(title = "新增问卷", businessType = BusinessType.INSERT)
+    @PostMapping("/addQuestionnaire")
+    public AjaxResult addQuestionnaire(@RequestBody Questionnaire questionnaire)
+    {
+        return toAjax(questionnaireService.addQuestionnaire(questionnaire));
+    }
+
+    /**
+     * 删除问卷
+     */
+    @PreAuthorize("@ss.hasPermi('system:questionnaire:add')")
+    @Log(title = "删除问卷", businessType = BusinessType.DELETE)
+    @DeleteMapping("/deleteQuestionnaire/{questionnaireId}")
+    public AjaxResult deleteQuestionnaire(@PathVariable Long questionnaireId)
+    {
+        return toAjax(questionnaireService.deleteQuestionnaire(questionnaireId));
+    }
+
 
     /**
      * 导出【请填写功能名称】列表

@@ -1,7 +1,11 @@
 package com.ruoyi.system.controller;
 
+import java.util.Comparator;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.system.domain.CommentWithReplies;
+import com.ruoyi.system.service.utils.CommentConverter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +27,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 【请填写功能名称】Controller
- * 
+ *
  * @author ruoyi
  * @date 2024-08-22
  */
@@ -45,6 +49,52 @@ public class CommentController extends BaseController
         List<Comment> list = commentService.selectCommentList(comment);
         return getDataTable(list);
     }
+
+    /**
+     * 按照点赞量排序评论
+     * @param articleId
+     * @return
+     */
+    @PreAuthorize("@ss.hasPermi('system:comment:list')")
+    @GetMapping("/listByLike")
+    public TableDataInfo listByLike(Long articleId)
+    {
+        Comment comment = new Comment();
+        comment.setArticleId(articleId);
+        startPage();
+        List<Comment> list = commentService.selectCommentList(comment);
+        List<CommentWithReplies> commentWithReplies = CommentConverter.convertToCommentWithReplies(list);
+        commentWithReplies.sort(Comparator.comparing(CommentWithReplies::getLike));
+        return getDataTable(commentWithReplies);
+    }
+    /**
+     * 按照时间排序评论
+     * @param articleId
+     * @return
+     */
+    @PreAuthorize("@ss.hasPermi('system:comment:list')")
+    @GetMapping("/listByTime")
+    public TableDataInfo listByTime(Long articleId)
+    {
+        Comment comment = new Comment();
+        comment.setArticleId(articleId);
+        startPage();
+        List<Comment> list = commentService.selectCommentList(comment);
+        List<CommentWithReplies> commentWithReplies = CommentConverter.convertToCommentWithReplies(list);
+        commentWithReplies.sort(Comparator.comparing(CommentWithReplies::getCreateTime));
+        return getDataTable(commentWithReplies);
+    }
+    /**
+     * 新增【请填写功能名称】
+     */
+    @PreAuthorize("@ss.hasPermi('system:comment:query')")
+    @Log(title = "【请填写功能名称】", businessType = BusinessType.INSERT)
+    @PostMapping("addComment")
+    public AjaxResult addComment(@RequestBody Comment comment)
+    {
+        return toAjax(commentService.insertComment(comment));
+    }
+
 
     /**
      * 导出【请填写功能名称】列表

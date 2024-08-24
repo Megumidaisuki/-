@@ -1,9 +1,12 @@
 package com.ruoyi.system.controller;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.system.service.ICommentService;
+import com.ruoyi.system.service.utils.RedisService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +41,9 @@ public class ArticleController extends BaseController
 
     @Autowired
     private ICommentService commentService;
+
+    @Autowired
+    private RedisService redisService;
     /**
      * 展示热门推荐
      */
@@ -48,23 +54,38 @@ public class ArticleController extends BaseController
         Article article = new Article();
         startPage();
         List<Article> list = articleService.selectArticleList(article);
+        Collections.sort(list,(o1, o2) -> o2.getViewCount().compareTo(o1.getViewCount()));
         return getDataTable(list);
     }
     @PreAuthorize("@ss.hasPermi('system:article:list')")
-    @GetMapping("/addLike")
-    public AjaxResult addLike(Integer id,Integer status)
+    @PostMapping("/addLike")
+    public AjaxResult addLike(Long id,Integer status)
     {
-        AjaxResult res = null;
         if(status == 0){
             //文章点赞
-            res =
+            redisService.incrementLikeCount(id);
         }else if(status == 1){
             //评论点赞
-            res = commentService.addLike(id);
+            redisService.incrementCommentLikeCount(id);
         }
-        return res;
+        return AjaxResult.success();
     }
-
+    @PreAuthorize("@ss.hasPermi('system:article:list')")
+    @PostMapping("/addView")
+    public AjaxResult addView(Long id)
+    {
+        redisService.incrementViewCount(id);
+        return AjaxResult.success();
+    }
+    /**
+     * 获取文章详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('system:article:query')")
+    @GetMapping(value = "/{articleId}")
+    public AjaxResult getInfo(@PathVariable("articleId") Long articleId)
+    {
+        return success(articleService.selectArticleByArticleId(articleId));
+    }
 
     /**
      * 查询【请填写功能名称】列表
@@ -91,15 +112,7 @@ public class ArticleController extends BaseController
         util.exportExcel(response, list, "【请填写功能名称】数据");
     }
 
-    /**
-     * 获取【请填写功能名称】详细信息
-     */
-    @PreAuthorize("@ss.hasPermi('system:article:query')")
-    @GetMapping(value = "/{articleId}")
-    public AjaxResult getInfo(@PathVariable("articleId") Long articleId)
-    {
-        return success(articleService.selectArticleByArticleId(articleId));
-    }
+
 
     /**
      * 新增【请填写功能名称】

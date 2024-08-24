@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.system.mapper.QuestionnaireMapper">
-    
+
     <resultMap type="Questionnaire" id="QuestionnaireResult">
         <result property="questionnaireId"    column="questionnaire_id"    />
         <result property="content"    column="content"    />
@@ -17,16 +17,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectQuestionnaireList" parameterType="Questionnaire" resultMap="QuestionnaireResult">
         <include refid="selectQuestionnaireVo"/>
-        <where>  
+        <where>
             <if test="content != null  and content != ''"> and content = #{content}</if>
             <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
         </where>
     </select>
-    
+
     <select id="selectQuestionnaireByQuestionnaireId" parameterType="Long" resultMap="QuestionnaireResult">
         <include refid="selectQuestionnaireVo"/>
         where questionnaire_id = #{questionnaireId}
     </select>
+    <select id="selectFrontQuestionnaireList" parameterType="Questionnaire" resultMap="QuestionnaireResult">
+        <include refid="selectQuestionnaireVo"/>
+        <where>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
+        </where>
+    </select>
+
 
     <insert id="insertQuestionnaire" parameterType="Questionnaire">
         insert into questionnaire
@@ -42,6 +50,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="isDeleted != null">#{isDeleted},</if>
          </trim>
+    </insert>
+    <insert id="insertQuestionnaireBack" useGeneratedKeys="true" keyProperty="questionnaireId">
+        insert into questionnaire
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="questionnaireId != null">questionnaire_id,</if>
+            <if test="content != null">content,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="questionnaireId != null">#{questionnaireId},</if>
+            <if test="content != null">#{content},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="isDeleted != null">#{isDeleted},</if>
+        </trim>
     </insert>
 
     <update id="updateQuestionnaire" parameterType="Questionnaire">
@@ -59,7 +82,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteQuestionnaireByQuestionnaireIds" parameterType="String">
-        delete from questionnaire where questionnaire_id in 
+        delete from questionnaire where questionnaire_id in
         <foreach item="questionnaireId" collection="array" open="(" separator="," close=")">
             #{questionnaireId}
         </foreach>
