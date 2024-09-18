@@ -155,6 +155,7 @@ public class RecordServiceImpl implements IRecordService
             }
 
             questionnaire.setQuestionList(questionList);
+            questionnaire.setUserId(r.getUserId());
             questionnaires.add(questionnaire);
         }
         return questionnaires;

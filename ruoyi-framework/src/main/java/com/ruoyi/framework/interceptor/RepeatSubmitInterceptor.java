@@ -32,7 +32,7 @@ public abstract class RepeatSubmitInterceptor implements HandlerInterceptor
                 if (this.isRepeatSubmit(request, annotation))
                 {
                     AjaxResult ajaxResult = AjaxResult.error(annotation.message());
-                    ServletUtils.renderString(response, JSON.toJSONString(ajaxResult));
+                    ServletUtils.renderString(response, JSON.toJSONString(ajaxResult),409);
                     return false;
                 }
             }

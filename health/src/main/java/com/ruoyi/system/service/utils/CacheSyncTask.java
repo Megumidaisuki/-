@@ -1,5 +1,7 @@
 package com.ruoyi.system.service.utils;
 
+import com.ruoyi.system.domain.Article;
+import com.ruoyi.system.mapper.ArticleMapper;
 import com.ruoyi.system.service.utils.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -14,14 +16,13 @@ public class CacheSyncTask {
 
     private final RedisService redisService;
     private final RedisTemplate redisTemplate;
-
     @Autowired
     public CacheSyncTask(RedisService redisService, RedisTemplate redisTemplate) {
         this.redisService = redisService;
         this.redisTemplate = redisTemplate;
     }
 
-    @Scheduled(fixedRate = 5000) // 每秒执行一次
+    @Scheduled(fixedRate = 60000) // 每秒执行一次
     public void syncCacheToDatabase() {
         // 使用 SCAN 而不是 KEYS 来获取所有键，避免性能问题
         Set<String> keys = redisTemplate.keys("article:*");
@@ -30,9 +31,9 @@ public class CacheSyncTask {
                 // 从键名中解析出文章 ID 和类型
                 String[] parts = key.split(":");
                 Long articleId = Long.valueOf(parts[2]); // 例如 "article:like:1" 中的 1
-
                 if (parts[1].equals("like")) {
                     Integer likeCount = redisService.getLikeCount(articleId);
+                    //查询数据库的like，如果不相等就存
                     redisService.saveToArticleDatabase(articleId, likeCount, null);
                 } else if (parts[1].equals("view")) {
                     Integer viewCount = redisService.getViewCount(articleId);

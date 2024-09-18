@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.system.mapper.CardMapper">
-    
+
     <resultMap type="Card" id="CardResult">
         <result property="cardId"    column="card_id"    />
         <result property="userId"    column="user_id"    />
@@ -11,6 +11,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createTime"    column="create_time"    />
         <result property="isDeleted"    column="is_deleted"    />
         <result property="path"    column="path"    />
+        <result property="username" column="username"/>
+        <result property="avatar" column="avatar"/>
     </resultMap>
 
     <sql id="selectCardVo">
@@ -19,17 +21,34 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectCardList" parameterType="Card" resultMap="CardResult">
         <include refid="selectCardVo"/>
-        <where>  
+        <where>
             <if test="userId != null "> and user_id = #{userId}</if>
             <if test="score != null "> and score = #{score}</if>
             <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
             <if test="path != null  and path != ''"> and path = #{path}</if>
         </where>
     </select>
-    
+
     <select id="selectCardByCardId" parameterType="Long" resultMap="CardResult">
         <include refid="selectCardVo"/>
         where card_id = #{cardId}
+    </select>
+    <select id="getCardScoreRankings" resultMap="CardResult">
+        select c.card_id, c.score, c.create_time, su.user_name as username,su.avatar as avatar, c.user_id
+        from card c, sys_user su
+        where c.user_id = su.user_id
+        and c.is_deleted = 0
+        <if test="status == 1">
+            and DATE_FORMAT(c.create_time, '%Y-%m-%d') = #{formattedDate}
+        </if>
+        <if test="status == 2">
+            and DATE_FORMAT(c.create_time, '%Y-%m') = #{formattedDate}
+        </if>
+        <if test="status == 3">
+            and DATE_FORMAT(c.create_time, '%Y') = #{formattedDate}
+        </if>
+        order by c.score desc
+        limit 10
     </select>
 
     <insert id="insertCard" parameterType="Card">
@@ -69,7 +88,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteCardByCardIds" parameterType="String">
-        delete from card where card_id in 
+        delete from card where card_id in
         <foreach item="cardId" collection="array" open="(" separator="," close=")">
             #{cardId}
         </foreach>

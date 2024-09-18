@@ -17,6 +17,7 @@ ruoyi:
 server:
   # 服务器的HTTP端口，默认为8080
   port: 8080
+#  port: 3233
   servlet:
     # 应用的访问路径
     context-path: /
@@ -30,6 +31,9 @@ server:
       max: 800
       # Tomcat启动初始化的线程数，默认值10
       min-spare: 100
+wechat:
+  appid: wxfc2d12eadccbc52f
+  secret: 3fa39979489cfc12e31360f8d14ca9c5
 
 # 日志配置
 logging:

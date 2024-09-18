@@ -42,7 +42,7 @@ public class QuestionnaireController extends BaseController
     /**
      * 查询问卷的详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:questionnaire:query')")
+    @PreAuthorize(value = "@ss.hasPermi('system:questionnaire:list')")
     @GetMapping("/getQuestionnaireMessage")
     public AjaxResult getQuestionnaieMessage(Questionnaire questionnaire)
     {
@@ -52,7 +52,8 @@ public class QuestionnaireController extends BaseController
     /**
      * 查询用户没有做过的问卷
      */
-    @PreAuthorize("@ss.hasPermi('system:questionnaire:query')")
+
+    @PreAuthorize("@ss.hasPermi('system:questionnaire:list')")
     @GetMapping("/getUserQuestionnaire")
     public AjaxResult getUserQuestionnaire()
     {
@@ -63,7 +64,7 @@ public class QuestionnaireController extends BaseController
     /**
      * 提交问卷
      */
-    @PreAuthorize("@ss.hasPermi('system:questionnaire:query')")
+    @PreAuthorize("@ss.hasPermi('system:questionnaire:list')")
     @PostMapping("/submitQuestionnaire")
     public AjaxResult submitQuestionnaire(@RequestBody Questionnaire questionnaire, String text){
         questionnaireService.submitQuestionnaire(questionnaire,text);
@@ -73,7 +74,7 @@ public class QuestionnaireController extends BaseController
     /**
      * 新增问卷
      */
-    @PreAuthorize("@ss.hasPermi('system:questionnaire:add')")
+    @PreAuthorize("@ss.hasPermi('system:questionnaire:list')")
     @Log(title = "新增问卷", businessType = BusinessType.INSERT)
     @PostMapping("/addQuestionnaire")
     public AjaxResult addQuestionnaire(@RequestBody Questionnaire questionnaire)
@@ -84,7 +85,7 @@ public class QuestionnaireController extends BaseController
     /**
      * 删除问卷
      */
-    @PreAuthorize("@ss.hasPermi('system:questionnaire:add')")
+
     @Log(title = "删除问卷", businessType = BusinessType.DELETE)
     @DeleteMapping("/deleteQuestionnaire/{questionnaireId}")
     public AjaxResult deleteQuestionnaire(@PathVariable Long questionnaireId)

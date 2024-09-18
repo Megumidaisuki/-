@@ -41,6 +41,7 @@ public class CommentController extends BaseController
     /**
      * 查询【请填写功能名称】列表
      */
+
     @PreAuthorize("@ss.hasPermi('system:comment:list')")
     @GetMapping("/list")
     public TableDataInfo list(Comment comment)
@@ -64,7 +65,7 @@ public class CommentController extends BaseController
         startPage();
         List<Comment> list = commentService.selectCommentList(comment);
         List<CommentWithReplies> commentWithReplies = CommentConverter.convertToCommentWithReplies(list);
-        commentWithReplies.sort(Comparator.comparing(CommentWithReplies::getLike));
+        commentWithReplies.sort((a,b) -> b.getLike().compareTo(a.getLike()));
         return getDataTable(commentWithReplies);
     }
     /**
@@ -81,15 +82,15 @@ public class CommentController extends BaseController
         startPage();
         List<Comment> list = commentService.selectCommentList(comment);
         List<CommentWithReplies> commentWithReplies = CommentConverter.convertToCommentWithReplies(list);
-        commentWithReplies.sort(Comparator.comparing(CommentWithReplies::getCreateTime));
+        commentWithReplies.sort((a,b) ->b.getCreateTime().compareTo(a.getCreateTime()));
         return getDataTable(commentWithReplies);
     }
     /**
      * 新增【请填写功能名称】
      */
-    @PreAuthorize("@ss.hasPermi('system:comment:query')")
+
     @Log(title = "【请填写功能名称】", businessType = BusinessType.INSERT)
-    @PostMapping("addComment")
+    @PostMapping("/addComment")
     public AjaxResult addComment(@RequestBody Comment comment)
     {
         return toAjax(commentService.insertComment(comment));

@@ -14,7 +14,7 @@ import com.ruoyi.common.xss.Xss;
 
 /**
  * 用户对象 sys_user
- * 
+ *
  * @author ruoyi
  */
 public class SysUser extends BaseEntity
@@ -30,6 +30,7 @@ public class SysUser extends BaseEntity
     private Long deptId;
 
     /** 用户账号 */
+    @NotBlank
     @Excel(name = "登录名称")
     private String userName;
 
@@ -142,7 +143,6 @@ public class SysUser extends BaseEntity
     }
 
     @Xss(message = "用户账号不能包含脚本字符")
-    @NotBlank(message = "用户账号不能为空")
     @Size(min = 0, max = 30, message = "用户账号长度不能超过30个字符")
     public String getUserName()
     {

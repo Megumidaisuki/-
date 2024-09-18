@@ -1,5 +1,6 @@
 package com.ruoyi.system.service.utils;
 
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.system.mapper.ArticleMapper;
 import com.ruoyi.system.mapper.CommentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +64,16 @@ public class RedisService {
         String key = "comment:like:" + commentId;
         redisTemplate.opsForValue().set(key, like);
     }
+    //把sessionKey存入redis
+    public void setSessionKey(String sessionKey){
+        String key = "session:key"+ SecurityUtils.getUserId();
+        redisTemplate.opsForValue().set(key,sessionKey);
+    }
+    //得到sessionKey
+    public void getSessionKey(){
+        String key = "session:key" + SecurityUtils.getUserId();
+        redisTemplate.opsForValue().get(key);
+    }
 
     public void saveToArticleDatabase(Long articleId, Integer articlelike, Integer viewCount) {
         // 这里可以调用相应的数据库服务，将缓存的点赞量和浏览量保存到数据库中
@@ -70,6 +81,7 @@ public class RedisService {
             articleMapper.renewArticle(articleId,articlelike,viewCount);
         }
     }
+
     public void saveToCommentDatabase(Long commentId,Integer commentlike) {
         // 这里可以调用相应的数据库服务，将缓存的点赞量和浏览量保存到数据库中
         if(commentlike != null){

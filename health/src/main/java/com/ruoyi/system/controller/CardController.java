@@ -74,7 +74,7 @@ public class CardController extends BaseController
     /**
      * 打卡
      */
-    @PreAuthorize("@ss.hasPermi('system:card:query')")
+    @PreAuthorize("@ss.hasPermi('system:card:list')")
     @Log(title = "【请填写功能名称】", businessType = BusinessType.INSERT)
     @PostMapping("/addCard")
     public AjaxResult addCard(String path)

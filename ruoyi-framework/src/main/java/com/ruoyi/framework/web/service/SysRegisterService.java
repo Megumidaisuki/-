@@ -20,7 +20,7 @@ import com.ruoyi.system.service.ISysUserService;
 
 /**
  * 注册校验方法
- * 
+ *
  * @author ruoyi
  */
 @Component
@@ -77,8 +77,14 @@ public class SysRegisterService
         {
             sysUser.setNickName(username);
             sysUser.setPassword(SecurityUtils.encryptPassword(password));
-            boolean regFlag = userService.registerUser(sysUser);
-            if (!regFlag)
+            Integer regFlag = userService.registerUser(sysUser);
+            //插入权限
+            if (regFlag >= 1)
+            {
+                //插入角色
+                userService.insertUserAuth(sysUser.getUserId(), new Long[]{2L});
+            }
+            if (regFlag <=0)
             {
                 msg = "注册失败,请联系系统管理人员";
             }
@@ -92,7 +98,7 @@ public class SysRegisterService
 
     /**
      * 校验验证码
-     * 
+     *
      * @param username 用户名
      * @param code 验证码
      * @param uuid 唯一标识

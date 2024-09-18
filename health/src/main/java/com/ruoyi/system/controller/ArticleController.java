@@ -9,14 +9,7 @@ import com.ruoyi.system.service.ICommentService;
 import com.ruoyi.system.service.utils.RedisService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -47,6 +40,7 @@ public class ArticleController extends BaseController
     /**
      * 展示热门推荐
      */
+
     @PreAuthorize("@ss.hasPermi('system:article:list')")
     @GetMapping("/frontList")
     public TableDataInfo frontList()
@@ -57,6 +51,27 @@ public class ArticleController extends BaseController
         Collections.sort(list,(o1, o2) -> o2.getViewCount().compareTo(o1.getViewCount()));
         return getDataTable(list);
     }
+    //科普and交流分享
+    @PreAuthorize("@ss.hasPermi('system:article:list')")
+    @GetMapping("/scienceList")
+    public TableDataInfo scienceList(@RequestParam Integer status)
+    {
+
+        Article article = new Article();
+        if(status == 0){
+            //科普
+            article.setStatus(0L);
+        } else if (status ==1) {
+            //交流分享
+            article.setStatus(1L);
+        }
+        startPage();
+        List<Article> list = articleService.selectArticleList(article);
+        Collections.sort(list,(o1, o2) -> o2.getCreateTime().compareTo(o1.getCreateTime()));
+        return getDataTable(list);
+    }
+
+
     @PreAuthorize("@ss.hasPermi('system:article:list')")
     @PostMapping("/addLike")
     public AjaxResult addLike(Long id,Integer status)
@@ -70,6 +85,7 @@ public class ArticleController extends BaseController
         }
         return AjaxResult.success();
     }
+
     @PreAuthorize("@ss.hasPermi('system:article:list')")
     @PostMapping("/addView")
     public AjaxResult addView(Long id)
@@ -80,7 +96,8 @@ public class ArticleController extends BaseController
     /**
      * 获取文章详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:article:query')")
+
+    @PreAuthorize("@ss.hasPermi('system:article:list')")
     @GetMapping(value = "/{articleId}")
     public AjaxResult getInfo(@PathVariable("articleId") Long articleId)
     {

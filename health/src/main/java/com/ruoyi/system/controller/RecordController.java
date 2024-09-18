@@ -51,6 +51,7 @@ public class RecordController extends BaseController
     /**
      * 获取提交的问卷信息
      */
+
     @PreAuthorize("@ss.hasPermi('system:record:list')")
     @GetMapping("/getQuestionnaireMessage")
     public TableDataInfo getQuestionnaireMessage(Record record)

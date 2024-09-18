@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.StepMapper">
+    
+    <resultMap type="Step" id="StepResult">
+        <result property="stepId"    column="step_id"    />
+        <result property="stepCounts"    column="step_counts"    />
+        <result property="time"    column="time"    />
+        <result property="userId"    column="user_id"    />
+    </resultMap>
+
+    <sql id="selectStepVo">
+        select step_id, step_counts, time, user_id from step
+    </sql>
+
+    <select id="selectStepList" parameterType="Step" resultMap="StepResult">
+        <include refid="selectStepVo"/>
+        <where>  
+            <if test="stepCounts != null  and stepCounts != ''"> and step_counts = #{stepCounts}</if>
+            <if test="time != null  and time != ''"> and time = #{time}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+        </where>
+    </select>
+    
+    <select id="selectStepByStepId" parameterType="Long" resultMap="StepResult">
+        <include refid="selectStepVo"/>
+        where step_id = #{stepId}
+    </select>
+
+    <insert id="insertStep" parameterType="Step" useGeneratedKeys="true" keyProperty="stepId">
+        insert into step
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="stepCounts != null">step_counts,</if>
+            <if test="time != null">time,</if>
+            <if test="userId != null">user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="stepCounts != null">#{stepCounts},</if>
+            <if test="time != null">#{time},</if>
+            <if test="userId != null">#{userId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStep" parameterType="Step">
+        update step
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="stepCounts != null">step_counts = #{stepCounts},</if>
+            <if test="time != null">time = #{time},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+        </trim>
+        where step_id = #{stepId}
+    </update>
+
+    <delete id="deleteStepByStepId" parameterType="Long">
+        delete from step where step_id = #{stepId}
+    </delete>
+
+    <delete id="deleteStepByStepIds" parameterType="String">
+        delete from step where step_id in 
+        <foreach item="stepId" collection="array" open="(" separator="," close=")">
+            #{stepId}
+        </foreach>
+    </delete>
+</mapper>

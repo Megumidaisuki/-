@@ -1,6 +1,9 @@
 package com.ruoyi.system.domain;
 
 import io.lettuce.core.protocol.CommandHandler;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -14,6 +17,9 @@ import java.util.List;
  * @author ruoyi
  * @date 2024-08-22
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Questionnaire extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -25,13 +31,6 @@ public class Questionnaire extends BaseEntity
     @Excel(name = "介绍")
     private String content;
 
-    public List<Question> getQuestionList() {
-        return questionList;
-    }
-
-    public void setQuestionList(List<Question> questionList) {
-        this.questionList = questionList;
-    }
 
     /** 逻辑删除 */
     @Excel(name = "逻辑删除")
@@ -39,41 +38,7 @@ public class Questionnaire extends BaseEntity
 
     private List<Question> questionList;
 
-    public void setQuestionnaireId(Long questionnaireId)
-    {
-        this.questionnaireId = questionnaireId;
-    }
+    private Long userId;
 
-    public Long getQuestionnaireId()
-    {
-        return questionnaireId;
-    }
-    public void setContent(String content)
-    {
-        this.content = content;
-    }
 
-    public String getContent()
-    {
-        return content;
-    }
-    public void setIsDeleted(Long isDeleted)
-    {
-        this.isDeleted = isDeleted;
-    }
-
-    public Long getIsDeleted()
-    {
-        return isDeleted;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("questionnaireId", getQuestionnaireId())
-            .append("content", getContent())
-            .append("createTime", getCreateTime())
-            .append("isDeleted", getIsDeleted())
-            .toString();
-    }
 }
